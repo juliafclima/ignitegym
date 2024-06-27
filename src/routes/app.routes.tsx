@@ -1,0 +1,89 @@
+import {
+  AntDesign,
+  MaterialCommunityIcons,
+  Octicons,
+} from "@expo/vector-icons";
+import {
+  BottomTabNavigationProp,
+  createBottomTabNavigator,
+} from "@react-navigation/bottom-tabs";
+
+import { Exercise } from "@screens/Exercise";
+import { History } from "@screens/History";
+import { Home } from "@screens/Home";
+import { Platform } from "react-native";
+import { Profile } from "@screens/Profile";
+import React from "react";
+import { useTheme } from "native-base";
+
+type AppRoutes = {
+  home: undefined;
+  exercise: undefined;
+  profile: undefined;
+  history: undefined;
+};
+
+export type AppNavigatorRoutesProps = BottomTabNavigationProp<AppRoutes>;
+
+const { Navigator, Screen } = createBottomTabNavigator<AppRoutes>();
+
+export function AppRoutes() {
+  const { sizes, colors } = useTheme();
+
+  const iconSize = sizes[6];
+
+  return (
+    <Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarShowLabel: false,
+        tabBarActiveTintColor: colors.green[500],
+        tabBarInactiveTintColor: colors.gray[200],
+        tabBarStyle: {
+          backgroundColor: colors.gray[600],
+          borderTopWidth: 0,
+        },
+      }}
+    >
+      <Screen
+        name="home"
+        component={Home}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="home" size={iconSize} color={color} />
+          ),
+        }}
+      />
+
+      <Screen
+        name="history"
+        component={History}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <Octicons name="history" size={iconSize} color={color} />
+          ),
+        }}
+      />
+
+      <Screen
+        name="profile"
+        component={Profile}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialCommunityIcons
+              name="account-circle-outline"
+              size={iconSize}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+      <Screen
+        name="exercise"
+        component={Exercise}
+        options={{ tabBarButton: () => null }}
+      />
+    </Navigator>
+  );
+}
