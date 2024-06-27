@@ -1,12 +1,12 @@
 import {
-  AntDesign,
-  MaterialCommunityIcons,
-  Octicons,
-} from "@expo/vector-icons";
-import {
   BottomTabNavigationProp,
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
+import {
+  Feather,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 
 import { Exercise } from "@screens/Exercise";
 import { History } from "@screens/History";
@@ -42,6 +42,7 @@ export function AppRoutes() {
         tabBarStyle: {
           backgroundColor: colors.gray[600],
           borderTopWidth: 0,
+          paddingBottom: Platform.OS === "ios" ? 20 : 0,
         },
       }}
     >
@@ -50,7 +51,7 @@ export function AppRoutes() {
         component={Home}
         options={{
           tabBarIcon: ({ color }) => (
-            <AntDesign name="home" size={iconSize} color={color} />
+            <Feather name="home" size={iconSize} color={color} />
           ),
         }}
       />
@@ -60,7 +61,7 @@ export function AppRoutes() {
         component={History}
         options={{
           tabBarIcon: ({ color }) => (
-            <Octicons name="history" size={iconSize} color={color} />
+            <MaterialIcons name="history" size={iconSize} color={color} />
           ),
         }}
       />
