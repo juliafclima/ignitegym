@@ -3,9 +3,10 @@ import {
   Roboto_700Bold,
   useFonts,
 } from "@expo-google-fonts/roboto";
-import { StatusBar, Text } from "react-native";
+import { StatusBar } from "react-native";
 
 import { Loading } from "@components/Loading";
+import { SignIn } from "@screens/SignIn";
 import { NativeBaseProvider } from "native-base";
 import { THEME } from "./src/theme";
 
@@ -20,7 +21,7 @@ export default function App() {
         translucent
       />
 
-      {!fontsLoaded ? <Text>Ola, mundo</Text> : <Loading />}
+      {fontsLoaded ? <SignIn /> : <Loading />}
     </NativeBaseProvider>
   );
 }
