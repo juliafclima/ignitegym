@@ -6,14 +6,14 @@ import { UserPhoto } from "./UserPhoto";
 
 interface HomeHeaderProps {
   name: string;
-  photo: string;
+  photoUserGithub: string;
 }
 
-export function HomeHeader({ name, photo }: HomeHeaderProps) {
+export function HomeHeader({ name, photoUserGithub }: HomeHeaderProps) {
   return (
     <HStack bg="gray.600" pt={16} pb={5} px={8} alignItems="center">
       <UserPhoto
-        source={{ uri: `https://github.com/${photo}.png` }}
+        source={{ uri: `https://github.com/${photoUserGithub}.png` }}
         size={16}
         alt="Imagem do usuário"
         mr={4}
