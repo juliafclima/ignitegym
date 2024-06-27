@@ -57,16 +57,6 @@ export function Profile() {
 
           <Input bg="gray.600" placeholder="E-mail" isDisabled />
 
-          <Heading
-            color="gray.200"
-            fontSize="md"
-            mb={2}
-            alignSelf="flex-start"
-            mt={6}
-          >
-            Alterar senha
-          </Heading>
-
           <Input bg="gray.600" placeholder="Senha antiga" secureTextEntry />
 
           <Input bg="gray.600" placeholder="Nova senha" secureTextEntry />
