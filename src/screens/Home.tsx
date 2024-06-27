@@ -9,11 +9,12 @@ import { useState } from "react";
 
 export function Home() {
   const [groups] = useState(["Costas", "Bíceps", "Tríceps", "ombro"]);
-  const [exercises] = useState([
-    "Puxada frontal",
-    "Remada curvada",
-    "Remada unilateral",
-  ]);
+   const [exercises] = useState([
+     "Puxada frontal",
+     "Remada curvada",
+     "Remada unilateral",
+     "Levantamento terras",
+   ]);
   const [groupSelected, setGroupSelected] = useState("Costas");
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
@@ -44,6 +45,8 @@ export function Home() {
           px: 8,
         }}
         my={10}
+        maxH={10}
+        minH={10}
       />
 
       <VStack px={8}>
