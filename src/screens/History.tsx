@@ -35,6 +35,7 @@ export function History() {
           exercises.length === 0 && { flex: 1, justifyContent: "center" }
         }
         ListEmptyComponent={() => <ListEmpty />}
+        showsVerticalScrollIndicator={false}
       />
     </VStack>
   );
