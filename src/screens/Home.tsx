@@ -16,11 +16,11 @@ export function Home() {
   ]);
   const [groupSelected, setGroupSelected] = useState("Costas");
 
-    const navigation = useNavigation<AppNavigatorRoutesProps>();
+  const navigation = useNavigation<AppNavigatorRoutesProps>();
 
-    function handleOpenExerciseDetails() {
-      navigation.navigate("exercise");
-    }
+  function handleOpenExerciseDetails() {
+    navigation.navigate("exercise");
+  }
 
   return (
     <VStack flex={1}>
