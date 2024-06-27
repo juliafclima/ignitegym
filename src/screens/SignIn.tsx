@@ -1,4 +1,4 @@
-import { Center, Heading, Image, Text, VStack } from "native-base";
+import { Center, Heading, Image, ScrollView, Text, VStack } from "native-base";
 
 import BackgroundImg from "@assets/background.png";
 import Logo from "@assets/logo.png";
@@ -7,41 +7,49 @@ import { Input } from "@components/Input";
 
 export function SignIn() {
   return (
-    <VStack flex={1} bg="gray.700" px={10}>
-      <Image
-        source={BackgroundImg}
-        alt="Pessoas treinando"
-        resizeMode="contain"
-        position="absolute"
-      />
-
-      <Center my={24}>
+    <ScrollView
+      contentContainerStyle={{ flexGrow: 1 }}
+      showsVerticalScrollIndicator={false}
+    >
+      <VStack flex={1} bg="gray.700" px={10} pb={16}>
         <Image
-          source={Logo}
-          alt="Logo Ignite Gym"
+          source={BackgroundImg}
+          alt="Pessoas treinando"
           resizeMode="contain"
           position="absolute"
         />
 
-        <Text color="gray.100" fontSize="sm">
-          Treine sua mente e o seu corpo.
-        </Text>
-      </Center>
+        <Center my={24}>
+          <Image source={Logo} alt="Logo Ignite Gym" resizeMode="contain" />
 
-      <Center>
-        <Heading color="gray.100" fontSize="xl" mb={6} fontFamily="heading">
-          Acesse a conta
-        </Heading>
+          <Text color="gray.100" fontSize="sm">
+            Treine sua mente e o seu corpo.
+          </Text>
+        </Center>
 
-        <Input
-          placeholder="E-mail"
-          keyboardType="email-address"
-          autoCapitalize="none"
-        />
-        <Input placeholder="Senha" secureTextEntry />
+        <Center>
+          <Heading color="gray.100" fontSize="xl" mb={6} fontFamily="heading">
+            Acesse a conta
+          </Heading>
+
+          <Input
+            placeholder="E-mail"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
+          <Input placeholder="Senha" secureTextEntry />
+
+          <Button title="Criar Conta" />
+        </Center>
+
+        <Center mt={24}>
+          <Text color="gray.100" fontSize="sm" mb={3} fontFamily="body">
+            Ainda não tem acesso?
+          </Text>
+        </Center>
 
         <Button title="Criar Conta" variant="outline" />
-      </Center>
-    </VStack>
+      </VStack>
+    </ScrollView>
   );
 }
