@@ -4,9 +4,10 @@ import {
   useFonts,
 } from "@expo-google-fonts/roboto";
 
+import { AuthContext } from "src/context/AuthContext";
 import { Loading } from "@components/Loading";
-import { Routes } from "@routes/index";
 import { NativeBaseProvider } from "native-base";
+import { Routes } from "@routes/index";
 import { StatusBar } from "react-native";
 import { THEME } from "./src/theme";
 
@@ -21,7 +22,18 @@ export default function App() {
         translucent
       />
 
-      {fontsLoaded ? <Routes /> : <Loading />}
+      <AuthContext.Provider
+        value={{
+          user: {
+            id: "1",
+            name: "Rodrigo Gonçalves",
+            email: "rodrigo@email.com",
+            avatar: "rodrigo.png",
+          },
+        }}
+      >
+        {fontsLoaded ? <Routes /> : <Loading />}
+      </AuthContext.Provider>
     </NativeBaseProvider>
   );
 }
