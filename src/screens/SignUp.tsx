@@ -1,15 +1,25 @@
 import * as yup from "yup";
 
-import { Center, Heading, Image, ScrollView, Text, VStack } from "native-base";
+import {
+  Center,
+  Heading,
+  Image,
+  ScrollView,
+  Text,
+  VStack,
+  useToast,
+} from "native-base";
 import { Controller, useForm } from "react-hook-form";
 
 import BackgroundImg from "@assets/background.png";
-import { Button } from "@components/Button";
-import { ImageBackground } from "react-native";
-import { Input } from "@components/Input";
 import Logo from "@assets/logo.png";
-import { useNavigation } from "@react-navigation/native";
+import { Button } from "@components/Button";
+import { Input } from "@components/Input";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import { ImageBackground } from "react-native";
+import { api } from "src/servers/api";
 
 type FormDataProps = {
   name: string;
@@ -46,18 +56,21 @@ export function SignUp() {
     navigation.goBack();
   }
 
-  async function handleSignUp({ name, email, password }: FormDataProps) {
-    const response = await fetch("http://192.168.1.159:3333/users", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name, email, password }),
-    });
+  const toast = useToast();
 
-    const data = await response.json();
-    console.log(data);
+  async function handleSignUp({ name, email, password }: FormDataProps) {
+    try {
+      const response = await api.post("/users", { name, email, password });
+      console.log(response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        return toast.show({
+          title: error.response?.data.message,
+          placement: "top",
+          bgColor: "red.500",
+        });
+      }
+    }
   }
 
   return (
