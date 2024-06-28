@@ -8,17 +8,28 @@ import { Input } from "@components/Input";
 import Logo from "@assets/logo.png";
 import { useNavigation } from "@react-navigation/native";
 
+type FormDataProps = {
+  name: string;
+  email: string;
+  password: string;
+  password_confirm: string;
+};
+
 export function SignUp() {
   const navigation = useNavigation();
 
-   const { control, handleSubmit } = useForm();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormDataProps>();
 
   function handleGoBack() {
     navigation.goBack();
   }
 
-  function handleSignUp(data: any) {
-    console.log({ data });
+  function handleSignUp(data: FormDataProps) {
+    console.log(data);
   }
 
   return (
@@ -33,7 +44,7 @@ export function SignUp() {
         showsVerticalScrollIndicator={false}
       >
         <VStack flex={1} px={10} pb={16}>
-          <Center my={20}>
+          <Center my={10}>
             <Image source={Logo} alt="Logo Ignite Gym" resizeMode="contain" />
 
             <Text color="gray.100" fontSize="sm">
@@ -49,11 +60,15 @@ export function SignUp() {
             <Controller
               control={control}
               name="name"
+              rules={{
+                required: "Informe o nome.",
+              }}
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="Nome"
                   onChangeText={onChange}
                   value={value}
+                  errorMessage={errors.name?.message}
                 />
               )}
             />
@@ -61,6 +76,13 @@ export function SignUp() {
             <Controller
               control={control}
               name="email"
+              rules={{
+                required: "Informe o email.",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: "E-mail inválido",
+                },
+              }}
               render={({ field: { onChange, value } }) => (
                 <Input
                   placeholder="E-mail"
@@ -68,10 +90,11 @@ export function SignUp() {
                   autoCapitalize="none"
                   onChangeText={onChange}
                   value={value}
+                  errorMessage={errors.email?.message}
                 />
               )}
             />
-
+  
             <Controller
               control={control}
               name="password"

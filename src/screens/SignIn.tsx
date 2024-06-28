@@ -27,7 +27,7 @@ export function SignIn() {
         showsVerticalScrollIndicator={false}
       >
         <VStack flex={1} px={10} pb={16}>
-          <Center my={20}>
+          <Center my={16}>
             <Image source={Logo} alt="Logo Ignite Gym" resizeMode="contain" />
 
             <Text color="gray.100" fontSize="sm">
