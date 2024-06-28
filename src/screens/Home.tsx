@@ -1,20 +1,20 @@
 import { FlatList, HStack, Heading, Text, VStack } from "native-base";
 
-import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { ExerciseCard } from "@components/ExerciseCard";
 import { Group } from "@components/Group";
 import { HomeHeader } from "@components/HomeHeader";
 import { useNavigation } from "@react-navigation/native";
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { useState } from "react";
 
 export function Home() {
   const [groups] = useState(["Costas", "Bíceps", "Tríceps", "ombro"]);
-   const [exercises] = useState([
-     "Puxada frontal",
-     "Remada curvada",
-     "Remada unilateral",
-     "Levantamento terras",
-   ]);
+  const [exercises] = useState([
+    "Puxada frontal",
+    "Remada curvada",
+    "Remada unilateral",
+    "Levantamento terras",
+  ]);
   const [groupSelected, setGroupSelected] = useState("Costas");
 
   const navigation = useNavigation<AppNavigatorRoutesProps>();
@@ -51,7 +51,7 @@ export function Home() {
 
       <VStack px={8}>
         <HStack justifyContent="space-between" mb={5}>
-          <Heading color="gray.200" fontSize="md">
+          <Heading color="gray.200" fontSize="md" fontFamily="heading">
             Exercícios
           </Heading>
 

@@ -4,12 +4,12 @@ import { Center, Heading, Image, ScrollView, Text, VStack } from "native-base";
 import { Controller, useForm } from "react-hook-form";
 
 import BackgroundImg from "@assets/background.png";
-import Logo from "@assets/logo.png";
 import { Button } from "@components/Button";
-import { Input } from "@components/Input";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigation } from "@react-navigation/native";
 import { ImageBackground } from "react-native";
+import { Input } from "@components/Input";
+import Logo from "@assets/logo.png";
+import { useNavigation } from "@react-navigation/native";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 type FormDataProps = {
   name: string;
@@ -28,7 +28,7 @@ const signUpSchema = yup.object({
   password_confirm: yup
     .string()
     .required("Confirme a senha.")
-    .oneOf([yup.ref("password"), null], "A confirmação da senha não confere"),
+    .oneOf([yup.ref("password")], "A confirmação da senha não confere"),
 });
 
 export function SignUp() {
