@@ -13,9 +13,9 @@ import {
 import { Button } from "@components/Button";
 import { Input } from "@components/Input";
 import { ScreenHeader } from "@components/ScreenHeader";
-import { TouchableOpacity } from "react-native";
 import { UserPhoto } from "@components/UserPhoto";
 import { useState } from "react";
+import { TouchableOpacity } from "react-native";
 
 const PHOTO_SIZE = 33;
 
@@ -37,7 +37,7 @@ export function Profile() {
         aspect: [4, 4],
         allowsEditing: true,
       });
-      
+
       if (photoSelected.canceled) {
         return;
       }
