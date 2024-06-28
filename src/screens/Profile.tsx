@@ -13,9 +13,10 @@ import {
 import { Button } from "@components/Button";
 import { Input } from "@components/Input";
 import { ScreenHeader } from "@components/ScreenHeader";
-import { UserPhoto } from "@components/UserPhoto";
-import { useState } from "react";
 import { TouchableOpacity } from "react-native";
+import { UserPhoto } from "@components/UserPhoto";
+import { useAuth } from "@hooks/useAuth";
+import { useState } from "react";
 
 const PHOTO_SIZE = 33;
 

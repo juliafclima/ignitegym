@@ -1,5 +1,9 @@
+import {
+  storageUserGet,
+  storageUserRemove,
+  storageUserSave,
+} from "@storage/storageUser";
 import { ReactNode, createContext, useEffect, useState } from "react";
-import { storageUserGet, storageUserRemove, storageUserSave } from "@storage/storageUser";
 
 import { UserDTO } from "@dtos/UserDTO";
 import { api } from "src/servers/api";
@@ -28,7 +32,7 @@ export function AuthContextProvider({ children }: AuthContextProviderProps) {
     try {
       const { data } = await api.post("/sessions", { email, password });
 
-      if (data.user) {
+      if (data.user && data.token) {
         setUser(data.user);
         storageUserSave(data.user);
       }
