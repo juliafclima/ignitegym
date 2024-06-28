@@ -1,10 +1,10 @@
 import { FlatList, HStack, Heading, Text, VStack } from "native-base";
 
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { ExerciseCard } from "@components/ExerciseCard";
 import { Group } from "@components/Group";
 import { HomeHeader } from "@components/HomeHeader";
 import { useNavigation } from "@react-navigation/native";
-import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { useState } from "react";
 
 export function Home() {
@@ -25,7 +25,7 @@ export function Home() {
 
   return (
     <VStack flex={1}>
-      <HomeHeader name="Julia" photoUserGithub="juliafclima" />
+      <HomeHeader />
 
       <FlatList
         data={groups}
