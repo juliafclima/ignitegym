@@ -9,14 +9,14 @@ import {
   VStack,
 } from "native-base";
 
-import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import BodyPng from "@assets/body.png";
-import { Button } from "@components/Button";
-import { Feather } from "@expo/vector-icons";
 import RepetitionsPng from "@assets/repetitions.png";
 import SeriesPng from "@assets/series.png";
-import { TouchableOpacity } from "react-native";
+import { Button } from "@components/Button";
+import { Feather } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
+import { TouchableOpacity } from "react-native";
 
 export function Exercise() {
   const navigation = useNavigation<AppNavigatorRoutesProps>();
@@ -48,7 +48,7 @@ export function Exercise() {
           </Heading>
 
           <HStack alignItems="center">
-            <Image size="6" source={BodyPng} />
+            <Image size="6" source={BodyPng} alt="Foto do exercício" />
 
             <Text color="gray.200" ml={1} textTransform="capitalize">
               Costas

@@ -9,16 +9,16 @@ import {
 } from "native-base";
 import { Controller, useForm } from "react-hook-form";
 
+import { AppError } from "@utils/AppError";
+import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
 import BackgroundImg from "@assets/background.png";
-import Logo from "@assets/logo.png";
 import { Button } from "@components/Button";
+import { ImageBackground } from "react-native";
 import { Input } from "@components/Input";
+import Logo from "@assets/logo.png";
 import { useAuth } from "@hooks/useAuth";
 import { useNavigation } from "@react-navigation/native";
-import { AuthNavigatorRoutesProps } from "@routes/auth.routes";
-import { AppError } from "@utils/AppError";
 import { useState } from "react";
-import { ImageBackground } from "react-native";
 
 type FormData = {
   email: string;
@@ -47,6 +47,7 @@ export function SignIn() {
   async function handleSignIn({ email, password }: FormData) {
     try {
       setIsLoading(true);
+      
       await signIn(email, password);
     } catch (error) {
       const isAppError = error instanceof AppError;
