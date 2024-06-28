@@ -5,8 +5,8 @@ import {
 } from "@expo-google-fonts/roboto";
 
 import { Loading } from "@components/Loading";
-import { NativeBaseProvider } from "native-base";
 import { Routes } from "@routes/index";
+import { NativeBaseProvider } from "native-base";
 import { StatusBar } from "react-native";
 import { THEME } from "./src/theme";
 
