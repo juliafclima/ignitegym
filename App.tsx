@@ -4,11 +4,11 @@ import {
   useFonts,
 } from "@expo-google-fonts/roboto";
 
-import { AuthContext } from "src/context/AuthContext";
 import { Loading } from "@components/Loading";
-import { NativeBaseProvider } from "native-base";
 import { Routes } from "@routes/index";
+import { NativeBaseProvider } from "native-base";
 import { StatusBar } from "react-native";
+import { AuthContextProvider } from "src/context/AuthContext";
 import { THEME } from "./src/theme";
 
 export default function App() {
@@ -22,18 +22,9 @@ export default function App() {
         translucent
       />
 
-      <AuthContext.Provider
-        value={{
-          user: {
-            id: "1",
-            name: "Rodrigo Gonçalves",
-            email: "rodrigo@email.com",
-            avatar: "rodrigo.png",
-          },
-        }}
-      >
+      <AuthContextProvider>
         {fontsLoaded ? <Routes /> : <Loading />}
-      </AuthContext.Provider>
+      </AuthContextProvider>
     </NativeBaseProvider>
   );
 }
