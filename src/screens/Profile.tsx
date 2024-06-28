@@ -1,10 +1,13 @@
+import * as FileSystem from "expo-file-system";
+import * as ImagePicker from "expo-image-picker";
+
 import {
   Center,
-  Heading,
   ScrollView,
   Skeleton,
   Text,
   VStack,
+  useToast,
 } from "native-base";
 
 import { Button } from "@components/Button";
@@ -17,7 +20,53 @@ import { useState } from "react";
 const PHOTO_SIZE = 33;
 
 export function Profile() {
-  const [photoIsLoading] = useState(false);
+  const [photoIsLoading, setPhotoIsLoading] = useState(false);
+  const [userPhoto, setUserPhoto] = useState(
+    "https://as2.ftcdn.net/v2/jpg/02/15/84/43/1000_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
+  );
+
+  const toast = useToast();
+
+  async function handleUserPhotoSelected() {
+    setPhotoIsLoading(true);
+
+    try {
+      const photoSelected = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+        aspect: [4, 4],
+        allowsEditing: true,
+      });
+      
+      if (photoSelected.canceled) {
+        return;
+      }
+
+      if (photoSelected.assets.length > 0 && photoSelected.assets[0].uri) {
+        const photoInfo = await FileSystem.getInfoAsync(
+          photoSelected.assets[0].uri
+        );
+
+        if (photoInfo.exists) {
+          const fileSizeInBytes = photoInfo.size;
+
+          if (fileSizeInBytes && fileSizeInBytes > 3 * 1024 * 1024) {
+            return toast.show({
+              title: "Essa imagem é muito grande. Escolha uma de até 3MB.",
+              placement: "top",
+              bgColor: "red.500",
+            });
+          }
+
+          setUserPhoto(photoSelected.assets[0].uri);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setPhotoIsLoading(false);
+    }
+  }
 
   return (
     <VStack flex={1}>
@@ -35,13 +84,13 @@ export function Profile() {
             />
           ) : (
             <UserPhoto
-              source={{ uri: "https://github.com/juliafclima.png" }}
+              source={{ uri: userPhoto }}
               alt="Foto do usuário"
               size={PHOTO_SIZE}
             />
           )}
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleUserPhotoSelected}>
             <Text
               color="green.500"
               fontWeight="bold"
