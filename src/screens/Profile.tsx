@@ -9,16 +9,25 @@ import {
   VStack,
   useToast,
 } from "native-base";
+import { Controller, useForm } from "react-hook-form";
 
 import { Button } from "@components/Button";
 import { Input } from "@components/Input";
 import { ScreenHeader } from "@components/ScreenHeader";
-import { TouchableOpacity } from "react-native";
 import { UserPhoto } from "@components/UserPhoto";
 import { useAuth } from "@hooks/useAuth";
 import { useState } from "react";
+import { TouchableOpacity } from "react-native";
 
 const PHOTO_SIZE = 33;
+
+type FormDataProps = {
+  name: string;
+  email: string;
+  password: string;
+  oldPassword: string;
+  newPassword: string;
+};
 
 export function Profile() {
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
@@ -27,24 +36,33 @@ export function Profile() {
   );
 
   const toast = useToast();
+  const { user } = useAuth();
+  const { control } = useForm<FormDataProps>({
+    defaultValues: {
+      name: user.name,
+      email: user.email,
+    },
+  });
 
   async function handleUserPhotoSelected() {
     setPhotoIsLoading(true);
 
     try {
-      const photoSelected = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        quality: 1,
-        aspect: [4, 4],
-        allowsEditing: true,
-      });
+      const photoSelected =
+        await ImagePicker.ImagePicker.ImagePicker.launchImageLibraryAsync({
+          mediaTypes:
+            ImagePicker.ImagePicker.ImagePicker.MediaTypeOptions.Images,
+          quality: 1,
+          aspect: [4, 4],
+          allowsEditing: true,
+        });
 
       if (photoSelected.canceled) {
         return;
       }
 
       if (photoSelected.assets.length > 0 && photoSelected.assets[0].uri) {
-        const photoInfo = await FileSystem.getInfoAsync(
+        const photoInfo = await FileSystem.FileSystem.FileSystem.getInfoAsync(
           photoSelected.assets[0].uri
         );
 
@@ -103,9 +121,32 @@ export function Profile() {
             </Text>
           </TouchableOpacity>
 
-          <Input bg="gray.600" placeholder="Nome" />
+          <Controller
+            control={control}
+            name="name"
+            render={({ field: { value, onChange } }) => (
+              <Input
+                bg="gray.600"
+                placeholder="Nome"
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
 
-          <Input bg="gray.600" placeholder="E-mail" isDisabled />
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { value, onChange } }) => (
+              <Input
+                bg="gray.600"
+                placeholder="E-mail"
+                isDisabled
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
+          />
 
           <Input bg="gray.600" placeholder="Senha antiga" secureTextEntry />
 
