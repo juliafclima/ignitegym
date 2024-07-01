@@ -29,9 +29,9 @@ const PHOTO_SIZE = 33;
 type FormDataProps = {
   name: string;
   email: string;
-  password: string | null | undefined;
-  old_password: string | null | undefined;
-  confirm_password: string | null | undefined;
+  password: string;
+  old_password: string;
+  confirm_password: string;
 };
 
 const profileSchema = yup.object().shape({
@@ -46,15 +46,12 @@ const profileSchema = yup.object().shape({
     .nullable()
     .transform((value) => (!!value ? value : null))
     .when("password", {
-      is: (password) => !!password,
+      is: (password: any) => !!password,
       then: yup
         .string()
         .nullable()
         .required("Informe a confirmação da senha.")
-        .oneOf(
-          [yup.ref("password"), null],
-          "A confirmação de senha não confere."
-        ),
+        .oneOf([yup.ref("password")], "A confirmação de senha não confere."),
     }),
 });
 
@@ -75,6 +72,39 @@ export function Profile() {
     },
     resolver: yupResolver(profileSchema),
   });
+
+  async function handleProfileUpdate(data: FormDataProps) {
+    try {
+      setIsUpdating(true);
+
+      const userUpdated = { ...user, name: data.name };
+
+      await api.put("/users", data);
+
+      await updateUserProfile(userUpdated);
+
+      toast.show({
+        title: "Perfil atualizado com sucesso!",
+        placement: "top",
+        bgColor: "green.500",
+      });
+    } catch (error) {
+      console.error("Erro ao atualizar perfil:", error);
+
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível atualizar os dados. Tente novamente mais tarde.";
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    } finally {
+      setIsUpdating(false);
+    }
+  }
 
   async function handleUserPhotoSelected() {
     setPhotoIsLoading(true);
@@ -143,41 +173,15 @@ export function Profile() {
         }
       }
     } catch (error) {
-      console.log(error);
-    } finally {
-      setPhotoIsLoading(false);
-    }
-  }
-
-  async function handleProfileUpdate(data: FormDataProps) {
-    try {
-      setIsUpdating(true);
-
-      const userUpdated = user;
-      userUpdated.name = data.name;
-
-      await api.put("/users", data);
-
-      await updateUserProfile(userUpdated);
+      console.error("Error selecting photo:", error);
 
       toast.show({
-        title: "Perfil atualizado com sucesso!",
-        placement: "top",
-        bgColor: "green.500",
-      });
-    } catch (error) {
-      const isAppError = error instanceof AppError;
-      const title = isAppError
-        ? error.message
-        : "Não foi possível atualizar os dados. Tente novamente mais tarde.";
-
-      toast.show({
-        title,
+        title: "Failed to select photo",
         placement: "top",
         bgColor: "red.500",
       });
     } finally {
-      setIsUpdating(false);
+      setPhotoIsLoading(false);
     }
   }
 

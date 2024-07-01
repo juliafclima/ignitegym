@@ -1,19 +1,42 @@
+import axios, { AxiosInstance } from "axios";
+
 import { AppError } from "@utils/AppError";
-import axios from "axios";
+
+type SignOut = () => void;
+
+type APIInstanceProps = AxiosInstance & {
+  registerInterceptTokenManager: (signOut: SignOut) => () => void;
+};
 
 const api = axios.create({
   baseURL: "http://192.168.1.159:3333",
-});
+}) as APIInstanceProps;
 
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response && error.response.data) {
-      return Promise.reject(new AppError(error.response.data.message));
-    } else {
-      return Promise.reject(error);
+api.registerInterceptTokenManager = (singOut) => {
+  const interceptTokenManager = api.interceptors.response.use(
+    (response) => response,
+    (requestError) => {
+      if (requestError.response?.status === 401) {
+        if (
+          requestError.response.data?.message === "token.expired" ||
+          requestError.response.data?.message === "token.invalid"
+        ) {
+        }
+
+        singOut();
+      }
+
+      if (requestError.response && requestError.response.data) {
+        return Promise.reject(new AppError(requestError.response.data.message));
+      } else {
+        return Promise.reject(requestError);
+      }
     }
-  }
-);
+  );
+
+  return () => {
+    api.interceptors.response.eject(interceptTokenManager);
+  };
+};
 
 export { api };
