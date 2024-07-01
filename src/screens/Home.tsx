@@ -1,21 +1,23 @@
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { FlatList, HStack, Heading, Text, VStack, useToast } from "native-base";
 import { useCallback, useEffect, useState } from "react";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
+import { AppError } from "@utils/AppError";
+import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { ExerciseCard } from "@components/ExerciseCard";
+import { ExerciseDTO } from "@dtos/ExerciseDTO";
 import { Group } from "@components/Group";
 import { HomeHeader } from "@components/HomeHeader";
 import { Loading } from "@components/Loading";
-import { ExerciseDTO } from "@dtos/ExerciseDTO";
-import { AppNavigatorRoutesProps } from "@routes/app.routes";
 import { api } from "@services/api";
-import { AppError } from "@utils/AppError";
+import { color } from "native-base/lib/typescript/theme/styled-system";
+import { get } from "react-hook-form";
 
 export function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [groups, setGroups] = useState([]);
   const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
-  const [groupSelected, setGroupSelected] = useState("bíceps");
+   const [groupSelected, setGroupSelected] = useState('antebraço');
 
   const toast = useToast();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
