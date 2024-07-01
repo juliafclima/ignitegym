@@ -17,7 +17,7 @@ import { Button } from "@components/Button";
 import { ImageBackground } from "react-native";
 import { Input } from "@components/Input";
 import Logo from "@assets/logo.png";
-import { api } from "src/servers/api";
+import { api } from "@services/api";
 import { useAuth } from "@hooks/useAuth";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
@@ -71,7 +71,7 @@ export function SignUp() {
       await signIn(email, password);
     } catch (error) {
       setIsLoading(false);
-      
+
       const isAppError = error instanceof AppError;
 
       const title = isAppError

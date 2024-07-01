@@ -15,6 +15,7 @@ module.exports = function (api) {
             "@storage": "./src/storage",
             "@utils": "./src/utils",
             "@services": "./src/services",
+            "@servers": "./src/servers",
             "@hooks": "./src/hooks",
             "@contexts": "./src/contexts",
             "@routes": "./src/routes",
