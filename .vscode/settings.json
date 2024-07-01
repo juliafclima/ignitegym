@@ -1,0 +1,13 @@
+{
+  "files.autoSave": "afterDelay",
+  "editor.wordWrap": "on",
+  "javascript.experimental.updateImportsOnPaste": true,
+  "javascript.format.semicolons": "insert",
+  "javascript.inlayHints.functionLikeReturnTypes.enabled": true,
+  "javascript.inlayHints.enumMemberValues.enabled": true,
+  "javascript.inlayHints.parameterNames.enabled": "all",
+  "javascript.inlayHints.parameterTypes.enabled": true,
+  "javascript.inlayHints.propertyDeclarationTypes.enabled": true,
+  "javascript.inlayHints.variableTypes.enabled": true,
+  "typescript.experimental.updateImportsOnPaste": true
+}
