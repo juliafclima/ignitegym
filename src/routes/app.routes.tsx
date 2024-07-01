@@ -1,24 +1,26 @@
 import {
-  BottomTabNavigationProp,
-  createBottomTabNavigator,
-} from "@react-navigation/bottom-tabs";
-import {
   Feather,
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import {
+  BottomTabNavigationProp,
+  createBottomTabNavigator,
+} from "@react-navigation/bottom-tabs";
 
 import { Exercise } from "@screens/Exercise";
 import { History } from "@screens/History";
 import { Home } from "@screens/Home";
-import { Platform } from "react-native";
 import { Profile } from "@screens/Profile";
-import React from "react";
 import { useTheme } from "native-base";
+import React from "react";
+import { Platform } from "react-native";
 
 type AppRoutes = {
   home: undefined;
-  exercise: undefined;
+  exercise: {
+    exerciseId: string;
+  };
   profile: undefined;
   history: undefined;
 };
