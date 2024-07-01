@@ -13,7 +13,7 @@ import { AppError } from "@utils/AppError";
 export function Home() {
   const [groups, setGroups] = useState([]);
   const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
-  const [groupSelected, setGroupSelected] = useState("Costas");
+  const [groupSelected, setGroupSelected] = useState<string>("Costas");
 
   const toast = useToast();
   const navigation = useNavigation<AppNavigatorRoutesProps>();
@@ -109,7 +109,7 @@ export function Home() {
           data={exercises}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <ExerciseCard onPress={handleOpenExerciseDetails} />
+            <ExerciseCard onPress={handleOpenExerciseDetails} data={item} />
           )}
           showsVerticalScrollIndicator={false}
           _contentContainerStyle={{
