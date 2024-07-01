@@ -1,12 +1,12 @@
 import { Heading, SectionList, Text, VStack, useToast } from "native-base";
 import { useCallback, useState } from "react";
 
+import { AppError } from "@utils/AppError";
+import { HistoryByDayDTO } from "@dtos/HistoryByDayDTO";
 import { HistoryCard } from "@components/HistoryCard";
 import { ScreenHeader } from "@components/ScreenHeader";
-import { HistoryByDayDTO } from "@dtos/HistoryByDayDTO";
-import { useFocusEffect } from "@react-navigation/native";
 import { api } from "@services/api";
-import { AppError } from "@utils/AppError";
+import { useFocusEffect } from "@react-navigation/native";
 
 export function History() {
   const [isLoading, setIsLoading] = useState(true);

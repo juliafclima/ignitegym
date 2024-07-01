@@ -1,5 +1,6 @@
 import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
+import * as yup from "yup";
 
 import {
   Center,
@@ -11,58 +12,87 @@ import {
 } from "native-base";
 import { Controller, useForm } from "react-hook-form";
 
+import { AppError } from "@utils/AppError";
 import { Button } from "@components/Button";
 import { Input } from "@components/Input";
 import { ScreenHeader } from "@components/ScreenHeader";
+import { TouchableOpacity } from "react-native";
 import { UserPhoto } from "@components/UserPhoto";
+import { api } from "@services/api";
+import defaulUserPhotoImg from "@assets/userPhotoDefault.png";
 import { useAuth } from "@hooks/useAuth";
 import { useState } from "react";
-import { TouchableOpacity } from "react-native";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const PHOTO_SIZE = 33;
 
 type FormDataProps = {
   name: string;
   email: string;
-  password: string;
-  oldPassword: string;
-  newPassword: string;
+  password: string | null | undefined;
+  old_password: string | null | undefined;
+  confirm_password: string | null | undefined;
 };
 
+const profileSchema = yup.object().shape({
+  name: yup.string().required("Informe o nome"),
+  password: yup
+    .string()
+    .min(6, "A senha deve ter pelo menos 6 caracteres.")
+    .nullable()
+    .transform((value) => (!!value ? value : null)),
+  confirm_password: yup
+    .string()
+    .nullable()
+    .transform((value) => (!!value ? value : null))
+    .when("password", {
+      is: (password) => !!password,
+      then: yup
+        .string()
+        .nullable()
+        .required("Informe a confirmação da senha.")
+        .oneOf(
+          [yup.ref("password"), null],
+          "A confirmação de senha não confere."
+        ),
+    }),
+});
+
 export function Profile() {
+  const [isUpdating, setIsUpdating] = useState(false);
   const [photoIsLoading, setPhotoIsLoading] = useState(false);
-  const [userPhoto, setUserPhoto] = useState(
-    "https://as2.ftcdn.net/v2/jpg/02/15/84/43/1000_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"
-  );
 
   const toast = useToast();
-  const { user } = useAuth();
-  const { control } = useForm<FormDataProps>({
+  const { user, updateUserProfile } = useAuth();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormDataProps>({
     defaultValues: {
       name: user.name,
       email: user.email,
     },
+    resolver: yupResolver(profileSchema),
   });
 
   async function handleUserPhotoSelected() {
     setPhotoIsLoading(true);
 
     try {
-      const photoSelected =
-        await ImagePicker.ImagePicker.ImagePicker.launchImageLibraryAsync({
-          mediaTypes:
-            ImagePicker.ImagePicker.ImagePicker.MediaTypeOptions.Images,
-          quality: 1,
-          aspect: [4, 4],
-          allowsEditing: true,
-        });
+      const photoSelected = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 1,
+        aspect: [4, 4],
+        allowsEditing: true,
+      });
 
       if (photoSelected.canceled) {
         return;
       }
 
       if (photoSelected.assets.length > 0 && photoSelected.assets[0].uri) {
-        const photoInfo = await FileSystem.FileSystem.FileSystem.getInfoAsync(
+        const photoInfo = await FileSystem.getInfoAsync(
           photoSelected.assets[0].uri
         );
 
@@ -77,13 +107,77 @@ export function Profile() {
             });
           }
 
-          setUserPhoto(photoSelected.assets[0].uri);
+          const fileExtension = photoSelected.assets[0].uri.split(".").pop();
+
+          const photoFile = {
+            name: `${user.name}.${fileExtension}`.toLowerCase(),
+            uri: photoSelected.assets[0].uri,
+            type: `${photoSelected.assets[0].type}/${fileExtension}`,
+          } as any;
+
+          const userPhotoUploadForm = new FormData();
+
+          userPhotoUploadForm.append("avatar", photoFile);
+
+          const avatarUpdtedResponse = await api.patch(
+            "/users/avatar",
+            userPhotoUploadForm,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+
+          const userUpdated = user;
+
+          userUpdated.avatar = avatarUpdtedResponse.data.avatar;
+
+          await updateUserProfile(userUpdated);
+
+          toast.show({
+            title: "Foto atualizada!",
+            placement: "top",
+            bgColor: "green.500",
+          });
         }
       }
     } catch (error) {
       console.log(error);
     } finally {
       setPhotoIsLoading(false);
+    }
+  }
+
+  async function handleProfileUpdate(data: FormDataProps) {
+    try {
+      setIsUpdating(true);
+
+      const userUpdated = user;
+      userUpdated.name = data.name;
+
+      await api.put("/users", data);
+
+      await updateUserProfile(userUpdated);
+
+      toast.show({
+        title: "Perfil atualizado com sucesso!",
+        placement: "top",
+        bgColor: "green.500",
+      });
+    } catch (error) {
+      const isAppError = error instanceof AppError;
+      const title = isAppError
+        ? error.message
+        : "Não foi possível atualizar os dados. Tente novamente mais tarde.";
+
+      toast.show({
+        title,
+        placement: "top",
+        bgColor: "red.500",
+      });
+    } finally {
+      setIsUpdating(false);
     }
   }
 
@@ -103,7 +197,11 @@ export function Profile() {
             />
           ) : (
             <UserPhoto
-              source={{ uri: userPhoto }}
+              source={
+                user.avatar
+                  ? { uri: `${api.defaults.baseURL}/avatar/${user.avatar}` }
+                  : defaulUserPhotoImg
+              }
               alt="Foto do usuário"
               size={PHOTO_SIZE}
             />
@@ -130,6 +228,7 @@ export function Profile() {
                 placeholder="Nome"
                 onChangeText={onChange}
                 value={value}
+                errorMessage={errors.name?.message}
               />
             )}
           />
@@ -148,17 +247,53 @@ export function Profile() {
             )}
           />
 
-          <Input bg="gray.600" placeholder="Senha antiga" secureTextEntry />
-
-          <Input bg="gray.600" placeholder="Nova senha" secureTextEntry />
-
-          <Input
-            bg="gray.600"
-            placeholder="Confirme a nova senha"
-            secureTextEntry
+          <Controller
+            control={control}
+            name="old_password"
+            render={({ field: { onChange } }) => (
+              <Input
+                bg="gray.600"
+                placeholder="Senha antiga"
+                secureTextEntry
+                onChangeText={onChange}
+              />
+            )}
           />
 
-          <Button title="Atualizar" mt={4} />
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange } }) => (
+              <Input
+                bg="gray.600"
+                placeholder="Nova senha"
+                secureTextEntry
+                onChangeText={onChange}
+                errorMessage={errors.password?.message}
+              />
+            )}
+          />
+
+          <Controller
+            control={control}
+            name="confirm_password"
+            render={({ field: { onChange } }) => (
+              <Input
+                bg="gray.600"
+                placeholder="Confirme a nova senha"
+                secureTextEntry
+                onChangeText={onChange}
+                errorMessage={errors.confirm_password?.message}
+              />
+            )}
+          />
+
+          <Button
+            title="Atualizar"
+            mt={4}
+            onPress={handleSubmit(handleProfileUpdate)}
+            isLoading={isUpdating}
+          />
         </Center>
       </ScrollView>
     </VStack>

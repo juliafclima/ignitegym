@@ -2,5 +2,5 @@ import { HistoryDTO } from "./HistoryDTO";
 
 export type HistoryByDayDTO = {
   title: string;
-  data: HistoryDTO;
+  data: HistoryDTO[];
 };
